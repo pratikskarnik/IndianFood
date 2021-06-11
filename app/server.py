@@ -12,6 +12,7 @@ from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import HTMLResponse, JSONResponse
 from starlette.staticfiles import StaticFiles
 import pathlib
+import numpy as np
 plt = platform.system()
 if plt == 'Linux':
     pathlib.WindowsPath = pathlib.PosixPath
@@ -124,6 +125,7 @@ async def analyze(request):
     img_data = await request.form()
     img_bytes = await (img_data['file'].read())
     img = load_image(BytesIO(img_bytes))
+    img=np.array(img)
     prediction = learn.predict(img)[0]
     return JSONResponse({'result': str(prediction)})
 
