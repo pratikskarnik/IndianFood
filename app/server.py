@@ -1,9 +1,9 @@
-
 import aiohttp
 import asyncio
 import uvicorn
 import os
 import requests
+from fastai.vision.all import *
 from fastai import *
 from fastai.vision import *
 from io import BytesIO
@@ -11,11 +11,16 @@ from starlette.applications import Starlette
 from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import HTMLResponse, JSONResponse
 from starlette.staticfiles import StaticFiles
-Port = int(os.environ.get('PORT', 50000))
-export_file_url = 'https://drive.google.com/uc?export=download&id=1Rgg1zbJjpfAWp7sjayWaSV4d8WQO2DPn'
+import pathlib
+plt = platform.system()
+if plt == 'Linux':
+    pathlib.WindowsPath = pathlib.PosixPath
+export_file_url = 'https://www.googleapis.com/drive/v3/files/1Rgg1zbJjpfAWp7sjayWaSV4d8WQO2DPn?alt=media&key=AIzaSyD6g6HZdRRS_FJ8WyRwHv89r8OmVR4s0Ig'
 export_file_name = 'export.pkl'
 
-classes = ['Adhirasam', 'Aloo gobi', 'Aloo matar', 'Aloo methi',
+Port = int(os.environ.get('PORT', 50000))
+
+classes =['Adhirasam', 'Aloo gobi', 'Aloo matar', 'Aloo methi',
        'Aloo shimla mirch', 'Aloo tikki', 'Alu Pitika', 'Amti', 'Anarsa',
        'Ariselu', 'Attu', 'Avial', 'Bajri no rotlo', 'Balu shahi',
        'Bandar laddu', 'Basundi', 'Bebinca', 'Beef Fry', 'Bengena Pitika',
@@ -91,7 +96,7 @@ async def download_file(url, dest):
 async def setup_learner():
     await download_file(export_file_url, path / export_file_name)
     try:
-        learn = load_learner(path, export_file_name)
+        learn = load_learner(path/export_file_name , cpu=True)
         return learn
     except RuntimeError as e:
         if len(e.args) > 0 and 'CPU-only machine' in e.args[0]:
