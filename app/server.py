@@ -1,3 +1,7 @@
+import fastbook
+fastbook.setup_book()
+#hide
+from fastbook import *
 import aiohttp
 import asyncio
 import uvicorn
@@ -73,7 +77,7 @@ path = Path(__file__).parent
 
 app = Starlette()
 app.add_middleware(CORSMiddleware, allow_origins=['*'], allow_headers=['X-Requested-With', 'Content-Type'])
-app.mount('/static', StaticFiles(directory='app/static'))
+app.mount('/static', StaticFiles(directory='static/'))
 
 
 async def download_file(url, dest):
