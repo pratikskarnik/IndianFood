@@ -1,10 +1,9 @@
-import fastbook
-fastbook.setup_book()
-#hide
-from fastbook import *
+
 import aiohttp
 import asyncio
 import uvicorn
+import os
+import requests
 from fastai import *
 from fastai.vision import *
 from io import BytesIO
@@ -12,8 +11,6 @@ from starlette.applications import Starlette
 from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import HTMLResponse, JSONResponse
 from starlette.staticfiles import StaticFiles
-import os 
-import requests
 Port = int(os.environ.get('PORT', 50000))
 export_file_url = 'https://drive.google.com/uc?export=download&id=1Rgg1zbJjpfAWp7sjayWaSV4d8WQO2DPn'
 export_file_name = 'export.pkl'
@@ -79,7 +76,7 @@ path = Path(__file__).parent
 
 app = Starlette()
 app.add_middleware(CORSMiddleware, allow_origins=['*'], allow_headers=['X-Requested-With', 'Content-Type'])
-app.mount('/static', StaticFiles(directory='static/'))
+app.mount('/static', StaticFiles(directory='app/static'))
 
 
 async def download_file(url, dest):
